@@ -69,7 +69,6 @@ def generate_image(prompt):
             f.write(response.content)
         return "image.jpg"
 from moviepy.editor import ImageClip, AudioFileClip
-
 def make_video(image_path, audio_path, output_path="output.mp4"):
     audio_clip = AudioFileClip(audio_path)
     image_clip = ImageClip(image_path).set_duration(audio_clip.duration)
