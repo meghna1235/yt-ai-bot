@@ -46,3 +46,24 @@ def generate_voice(text, voice="en_US_male"):
         return "voice.mp3"
     else:
         raise Exception(f"TTS failed: {response.status_code} {response.text}")
+def generate_image(prompt):
+    hf_token = os.getenv("HUGGINGFACE_TOKEN")
+    headers = {
+        "Authorization": f"Bearer {hf_token}"
+    }
+    payload = {
+        "inputs": prompt
+    }
+
+    response = requests.post(
+        "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2",
+        headers=headers,
+        json=payload
+    )
+
+    if response.status_code == 200:
+        with open("image.jpg", "wb") as f:
+            f.write(response.content)
+        return "image.jpg"
+    else:
+        raise Exception(f"Image generation failed: {response.status_code} {response.text}")
