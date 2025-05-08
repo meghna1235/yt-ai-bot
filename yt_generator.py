@@ -68,6 +68,21 @@ def generate_image(prompt):
         with open("image.jpg", "wb") as f:
             f.write(response.content)
         return "image.jpg"
+from moviepy.editor import ImageClip, AudioFileClip
+
+def make_video(image_path, audio_path, output_path="output.mp4"):
+    audio_clip = AudioFileClip(audio_path)
+    image_clip = ImageClip(image_path).set_duration(audio_clip.duration)
+
+    image_clip = image_clip.set_audio(audio_clip)
+    image_clip = image_clip.resize(height=1920)  # for vertical video
+    image_clip = image_clip.set_position("center")
+
+    final = image_clip.set_fps(30)
+    final.write_videofile(output_path, codec="libx264", audio_codec="aac")
+
+    return output_path
+        
     else:
         raise Exception(f"Image generation failed: {response.status_code} {response.text}")
 
