@@ -4,7 +4,7 @@ import uuid
 
 # === STEP 1: GENERATE TOPIC + SCRIPT ===
 def generate_script():
-    api_key = os.getenv("OPENROUTER_API_KEY")  # You’ll add this on Render later
+    api_key = os.getenv("OPENROUTER_API_KEY")
 
     headers = {
         "Authorization": f"Bearer {api_key}"
@@ -21,11 +21,12 @@ def generate_script():
     response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
     full_text = response.json()['choices'][0]['message']['content']
 
-    # Separate title + script
     lines = full_text.strip().split('\n')
     title = lines[0].replace("Title:", "").strip() if "Title:" in lines[0] else f"AI Short {uuid.uuid4().hex[:5]}"
     script = "\n".join(lines[1:]).strip()
     return title, script
+
+# === STEP 2: GENERATE VOICEOVER USING TTSMaker ===
 def generate_voice(text, voice="en_US_male"):
     url = "https://api.ttsmaker.com/v1/convert"
     headers = {"Content-Type": "application/json"}
@@ -46,4 +47,28 @@ def generate_voice(text, voice="en_US_male"):
         return "voice.mp3"
     else:
         raise Exception(f"TTS failed: {response.status_code} {response.text}")
+
+# === STEP 3: GENERATE IMAGE USING HUGGINGFACE ===
+def generate_image(prompt):
+    hf_token = os.getenv("HUGGINGFACE_TOKEN")
+    headers = {
+        "Authorization": f"Bearer {hf_token}"
+    }
+    payload = {
+        "inputs": prompt
+    }
+
+    response = requests.post(
+        "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2",
+        headers=headers,
+        json=payload
+    )
+
+    if response.status_code == 200:
+        with open("image.jpg", "wb") as f:
+            f.write(response.content)
+        return "image.jpg"
+    else:
+        raise Exception(f"Image generation failed: {response.status_code} {response.text}")
+
 
