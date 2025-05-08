@@ -81,6 +81,43 @@ def make_video(image_path, audio_path, output_path="output.mp4"):
     final.write_videofile(output_path, codec="libx264", audio_codec="aac")
 
     return output_path
+    from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+import pickle
+
+def upload_to_youtube(video_path, title, description):
+    creds = None
+    if os.path.exists("token.pickle"):
+        with open("token.pickle", "rb") as token:
+            creds = pickle.load(token)
+    else:
+        from google_auth_oauthlib.flow import InstalledAppFlow
+        flow = InstalledAppFlow.from_client_secrets_file(
+            "credentials.json", ["https://www.googleapis.com/auth/youtube.upload"]
+        )
+        creds = flow.run_local_server(port=0)
+        with open("token.pickle", "wb") as token:
+            pickle.dump(creds, token)
+
+    youtube = build("youtube", "v3", credentials=creds)
+
+    request = youtube.videos().insert(
+        part="snippet,status",
+        body={
+            "snippet": {
+                "title": title,
+                "description": description,
+                "categoryId": "27",  # Education
+            },
+            "status": {
+                "privacyStatus": "public"  # Or unlisted for testing
+            }
+        },
+        media_body=MediaFileUpload(video_path)
+    )
+    response = request.execute()
+    return response
+
         
     else:
         raise Exception(f"Image generation failed: {response.status_code} {response.text}")
