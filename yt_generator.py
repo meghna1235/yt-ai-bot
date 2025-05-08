@@ -67,4 +67,3 @@ def generate_image(prompt):
         return "image.jpg"
     else:
         raise Exception(f"Image generation failed: {response.status_code} {response.text}")
-
