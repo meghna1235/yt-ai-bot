@@ -26,4 +26,24 @@ def generate_script():
     title = lines[0].replace("Title:", "").strip() if "Title:" in lines[0] else f"AI Short {uuid.uuid4().hex[:5]}"
     script = "\n".join(lines[1:]).strip()
     return title, script
+def generate_voice(text, voice="en_US_male"):
+    url = "https://api.ttsmaker.com/v1/convert"
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "text": text,
+        "voice": voice,
+        "format": "mp3",
+        "volume": 0,
+        "speed": 1,
+        "pitch": 1
+    }
+
+    response = requests.post(url, headers=headers, json=payload)
+
+    if response.status_code == 200:
+        with open("voice.mp3", "wb") as f:
+            f.write(response.content)
+        return "voice.mp3"
+    else:
+        raise Exception(f"TTS failed: {response.status_code} {response.text}")
 
