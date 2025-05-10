@@ -1,7 +1,12 @@
 openai
 requests
 moviepy
-google-api-python-client
-google-auth
-google-auth-oauthlib
-google-auth-httplib2
+python-dotenv
+nltk
+torch
+torchaudio
+numpy
+scipy
+pillow
+selenium
+undetected-chromedriver
