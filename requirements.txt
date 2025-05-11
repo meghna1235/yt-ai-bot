@@ -9,4 +9,4 @@ numpy
 scipy
 pillow
 selenium
-undetected-chromedriver
+"undetected-chromedriver"
