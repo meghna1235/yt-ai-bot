@@ -6,8 +6,9 @@ def main():
         channels = json.load(f)
 
     for channel in channels:
-        print(f"Running agent for: {channel['name']}")
-        run_agent(channel['name'], channel['niche'])
+        for i in range(channel["uploads_per_day"]):
+            print(f"Running upload {i+1}/{channel['uploads_per_day']} for: {channel['name']}")
+            run_agent(channel["name"], channel["niche"])
 
 if __name__ == "__main__":
     main()
