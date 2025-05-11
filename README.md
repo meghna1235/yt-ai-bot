@@ -6,17 +6,17 @@
 - Voiceovers with character-aware Bark voices (offline)
 - Animated TikTok-style captions
 - AI-generated thumbnails (PlaygroundAI or Craiyon)
-- Automatic YouTube upload integration (mocked here)
+- Automatic YouTube upload integration (YouTube Data API supported with OAuth)
 - Cron-friendly + multi-channel ready
 
 ### 🔧 Setup
 1. Clone the repo
-2. Copy `.env.example` → `.env` and add your keys
+2. Copy `.env.example` to `.env` and add your keys
 3. Run `pip install -r requirements.txt`
 4. Edit `channels.json` to define your niches
 5. Run `python main.py`
 
-### 📅 Free Hosting
+### 🕕 Free Hosting
 Deploy this on [Render.com](https://render.com) and use cron jobs to run every hour.
 
 ---
